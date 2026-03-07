@@ -49,7 +49,7 @@ pipeline {
                         docker images | grep ${DOCKER_IMAGE}
                         
                         # Run container for testing
-                        docker run -d --name test-container -p 8081:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker run -d --name container -p 8081:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         sleep 5
                         
                         # Test health endpoint
