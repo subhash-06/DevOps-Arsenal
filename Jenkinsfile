@@ -129,18 +129,6 @@ pipeline {
             }
         }
         
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    echo ' Waiting for ArgoCD to sync...'
-                    sh """
-                        echo "ArgoCD will automatically detect the manifest change and deploy"
-                        echo "New image: ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                        echo "Check ArgoCD UI at: http://${ARGOCD_SERVER}"
-                    """
-                    sleep 10
-                }
-            }
-        }
+        
     }
 }   
