@@ -113,7 +113,7 @@ jobs:
           git config user.name "GitHub Actions"
           
           # Update deployment file with new image tag
-          sed -i 's|image: ${{ env.DOCKER_IMAGE }}:.*|image: ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}|g' ${{ env.MANIFEST_FILE }}
+          sed -i 's|image: ${{ env.DOCKER_IMAGE }}:.*|image: ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}|g' ${{ env.MANIFEST_PATH }}
           
           # Commit and push changes
           git add ${{ env.MANIFEST_PATH }}
