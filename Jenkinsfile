@@ -13,7 +13,7 @@ pipeline {
         // Git configuration for manifest update
         GIT_REPO = 'https://github.com/subhash-06/DevOps-Arsenal.git'
         GIT_CREDENTIALS_ID = 'git'
-        MANIFEST_PATH = 'k8s/jenkins/deployment.yaml'
+        
         
         
     }
@@ -102,31 +102,44 @@ pipeline {
         }
         
         stage('Update Kubernetes Manifest') {
-            steps {
-                script {
-                    echo " Updating ${MANIFEST_PATH} with new image tag..."
-                    withCredentials([usernamePassword(
-                        credentialsId: GIT_CREDENTIALS_ID,
-                        usernameVariable: 'GIT_USER',
-                        passwordVariable: 'GIT_TOKEN'
-                    )]) {
-                        sh """
-                            # Configure git
-                            git config user.email "jenkins@cicd.com"
-                            git config user.name "Jenkins CI"
-                            
-                            # Update deployment.yaml with new image tag
-                            sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' ${MANIFEST_PATH}
-                            
-                            # Commit and push changes
-                            git add ${MANIFEST_PATH}
-                            git commit -m "Jenkins: Update image to ${DOCKER_TAG}  [skip ci]" || echo "No changes to commit"
-                            git push https://${GIT_USER}:${GIT_TOKEN}@github.com/subhash-06/DevOps-Arsenal.git HEAD:main
-                        """
-                    }
-                    echo ' Manifest updated and pushed to Git!'
-                }
+    steps {
+        script {
+            echo "Updating manifest in DevOps-Arsenal-2 with new image tag..."
+
+            withCredentials([usernamePassword(
+                credentialsId: GIT_CREDENTIALS_ID,
+                usernameVariable: 'GIT_USER',
+                passwordVariable: 'GIT_TOKEN'
+            )]) {
+
+                sh """
+                    # Clean workspace folder if exists
+                    rm -rf manifest-repo
+
+                    # Clone target repo
+                    git clone https://${GIT_USER}:${GIT_TOKEN}@github.com/subhash-06/DevOps-Arsenal-2.git manifest-repo
+                    cd manifest-repo
+
+                    # Configure git
+                    git config user.email "jenkins@cicd.com"
+                    git config user.name "Jenkins CI"
+
+                    # Update deployment.yaml (file is in root)
+                    sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment.yaml
+
+                    # Commit changes
+                    git add deployment.yaml
+                    git commit -m "Jenkins: Update image to ${DOCKER_TAG} [skip ci]" || echo "No changes to commit"
+
+                    # Push changes
+                    git push origin main
+                """
             }
+
+            echo 'Manifest updated and pushed to DevOps-Arsenal-2!'
+        }
+    }
+        
         }
         
         
