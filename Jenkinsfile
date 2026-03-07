@@ -121,7 +121,7 @@ pipeline {
                             # Commit and push changes
                             git add ${MANIFEST_PATH}
                             git commit -m "Jenkins: Update image to ${DOCKER_TAG}" || echo "No changes to commit"
-                            git push https://${GIT_USER}:${GIT_TOKEN}@github.com/subhash-06/cicd-demo.git HEAD:main
+                            git push https://${GIT_USER}:${GIT_TOKEN}@github.com/subhash-06/DevOps-Arsenal.git HEAD:main
                         """
                     }
                     echo ' Manifest updated and pushed to Git!'
