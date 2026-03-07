@@ -67,29 +67,18 @@ pipeline {
             }
         }
         
+        
         stage('Security Scan') {
-            steps {
-                script {
-                    echo ' Running Trivy security scan...'
-                    sh """
-                        # Install Trivy if not present
-                        which trivy || (
-                            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-                            echo "deb https://aquasecurity.github.io/trivy-repo/deb \$(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-                            sudo apt-get update
-                            sudo apt-get install -y trivy
-                        )
-                        
-                        # Scan image for vulnerabilities
-                        trivy image --severity HIGH,CRITICAL --exit-code 0 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        
-                        # Generate report
-                        trivy image --severity HIGH,CRITICAL --format json -o trivy-report.json ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
-                    echo ' Security scan complete!'
-                }
-            }
+    steps {
+        script {
+            echo 'Running Trivy security scan...'
+            sh """
+                trivy image --severity HIGH,CRITICAL --exit-code 0 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                trivy image --severity HIGH,CRITICAL --format json -o trivy-report.json ${DOCKER_IMAGE}:${DOCKER_TAG}
+            """
         }
+    }
+}
         
         stage('Push to Docker Hub') {
             steps {
