@@ -58,7 +58,7 @@ pipeline {
                         # Test main page
                         curl -f http://localhost:8081 || exit 1
                         
-                        # Cleanup test container
+                        # Cleanup test containe
                         docker stop test-container
                         docker rm test-container
                     """
