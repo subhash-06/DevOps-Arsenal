@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-app-service
+  namespace: default
+  labels:
+    app: jenkins-app
+    pipeline: jenkins
+spec:
+  type: ClusterIP
+  selector:
+    app: jenkins-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  sessionAffinity: None
